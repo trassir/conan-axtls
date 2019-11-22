@@ -33,5 +33,5 @@ script:
   
 after_success:
   - conan remote add trassir https://api.bintray.com/conan/trassir/conan-public -f
-  - conan user -r trassir worldemar -p ${CONAN_API_KEY}
+  - conan user -r trassir -p ${CONAN_API_KEY} worldemar
   - conan upload --force -r axtls --retry 3 --retry-wait 10 --confirm "axtls/master@worldemar/testing";
