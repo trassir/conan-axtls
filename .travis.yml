@@ -12,16 +12,16 @@ matrix:
    include:
       - <<: *linux
         env: CONAN_GCC_VERSIONS=4.9 CONAN_DOCKER_IMAGE=conanio/gcc49 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
-      - <<: *linux
-        env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=conanio/gcc7 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
-      - <<: *linux
-        env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
-      - <<: *osx
-        osx_image: xcode10.3
-        env: CONAN_APPLE_CLANG_VERSIONS=10.0 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
-      - <<: *osx
-        osx_image: xcode11.2
-        env: CONAN_APPLE_CLANG_VERSIONS=11.0 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
+      #- <<: *linux
+      #  env: CONAN_GCC_VERSIONS=7 CONAN_DOCKER_IMAGE=conanio/gcc7 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
+      #- <<: *linux
+      #  env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
+      #- <<: *osx
+      #  osx_image: xcode10.3
+      #  env: CONAN_APPLE_CLANG_VERSIONS=10.0 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
+      #- <<: *osx
+      #  osx_image: xcode11.2
+      #  env: CONAN_APPLE_CLANG_VERSIONS=11.0 CONAN_ARCHS=x86_64 CONAN_BUILD_TYPES=Release
 
 install:
   - chmod +x .travis/install.sh
@@ -30,3 +30,8 @@ install:
 script:
   - chmod +x .travis/run.sh
   - ./.travis/run.sh
+  
+after_success:
+  - conan remote add trassir https://api.bintray.com/conan/trassir/conan-public -f
+  - conan user -r trassir worldemar -p ${CONAN_API_KEY}
+  - conan upload --force -r axtls --retry 3 --retry-wait 10 --confirm "axtls/master@worldemar/testing";
